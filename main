@@ -1,0 +1,351 @@
+using System;
+
+enum WeekDays
+{
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday,
+    Saturday,
+    Sunday
+}
+struct Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+
+    public Person(string name, int age)
+    {
+        Name = name;
+        Age = age;
+    }
+}
+enum Season
+{
+    Spring,
+    Summer,
+    Autumn,
+    Winter
+}
+[Flags]
+enum Permissions : byte
+{
+    None = 0,
+    Read = 1,      // 0001
+    Write = 2,     // 0010
+    Delete = 4,    // 0100
+    Execute = 8    // 1000
+}
+enum Colors
+{
+    Red,
+    Green,
+    Blue
+}
+struct Point
+{
+    public double X { get; set; }
+    public double Y { get; set; }
+
+    public Point(double x, double y)
+    {
+        X = x;
+        Y = y;
+    }
+
+    public double DistanceTo(Point other)
+    {
+        double dx = X - other.X;
+        double dy = Y - other.Y;
+        return Math.Sqrt(dx * dx + dy * dy);
+    }
+}
+struct Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+}
+
+class Program
+{
+    static void Main()
+    {
+        
+        //1
+        int num1 = 10;
+        TestValue(num1);
+        Console.WriteLine($"By Value: {num1}"); 
+        int num2 = 10;
+        TestRef(ref num2);
+        Console.WriteLine($"By Ref: {num2}");  
+
+        //2
+        Person p1 = new Person { Name = "Ahmed" };
+        ModifyByValue(p1);
+        Console.WriteLine($"By Value: {p1.Name}"); 
+
+        Person p2 = new Person { Name = "Ahmed" };
+        ModifyByRef(ref p2);
+        Console.WriteLine($"By Ref: {p2.Name}");  
+
+        //3
+        Console.Write("Enter First Number: ");
+        double n1 = double.Parse(Console.ReadLine());
+
+        Console.Write("Enter Second Number: ");
+        double n2 = double.Parse(Console.ReadLine());
+
+        SumAndSubtract(n1, n2, out double sumResult, out double subResult);
+
+        Console.WriteLine($"Summation = {sumResult}");
+        Console.WriteLine($"Subtraction = {subResult}");
+
+        //4
+        Console.Write("Enter a number: ");
+        int num = int.Parse(Console.ReadLine());
+
+        int result = SumOfDigits(num);
+        Console.WriteLine($"The sum of the digits of the number {num} is: {result}");
+
+        //5
+        Console.Write("Enter a number: ");
+        int n = int.Parse(Console.ReadLine());
+
+        if (IsPrime(n))
+        {
+            Console.WriteLine($"{n} is a prime number.");
+        }
+        else
+        {
+            Console.WriteLine($"{n} is not a prime number.");
+        }
+
+        //6
+        int[] numbers = { 12, 5, 8, 45, 2, 19 };
+        int minVal = 0;
+        int maxVal = 0;
+
+        MinMaxArray(numbers, ref minVal, ref maxVal);
+
+        Console.WriteLine($"Min Value: {minVal}");
+        Console.WriteLine($"Max Value: {maxVal}");
+
+        //7
+        Console.Write("Enter a number: ");
+        int num = int.Parse(Console.ReadLine());
+        Console.WriteLine($"Factorial of {num} is: {Factorial(num)}");
+        
+        //8
+        string text = "Hello World";
+        string updatedText = ChangeChar(text, 1, 'a'); // Hallo World
+        Console.WriteLine($"Original: {text}");
+        Console.WriteLine($"Modified: {updatedText}");
+
+        //enum1
+        Console.WriteLine("Days of the week:");
+        foreach (var day in Enum.GetValues(typeof(WeekDays)))
+        {
+            Console.WriteLine(day);
+        }
+
+        //struct
+        Person[] people = new Person[3];
+        people[0] = new Person("Ahmed", 25);
+        people[1] = new Person("Sara", 30);
+        people[2] = new Person("Mohamed", 22);
+
+        Console.WriteLine("People List:");
+        foreach (var p in people)
+        {
+            Console.WriteLine($"Name: {p.Name}, Age: {p.Age}");
+        }
+
+        //enum2
+        Console.Write("Enter Season (Spring, Summer, Autumn, Winter): ");
+        string input = Console.ReadLine();
+
+        if (Enum.TryParse(input, true, out Season season))
+        {
+            switch (season)
+            {
+                case Season.Spring:
+                    Console.WriteLine("Spring: March to May");
+                    break;
+                case Season.Summer:
+                    Console.WriteLine("Summer: June to August");
+                    break;
+                case Season.Autumn:
+                    Console.WriteLine("Autumn: September to November");
+                    break;
+                case Season.Winter:
+                    Console.WriteLine("Winter: December to February");
+                    break;
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid Season Name!");
+        }
+
+        //flags
+        Permissions userPerms = Permissions.Read | Permissions.Write;
+        Console.WriteLine($"Initial Permissions: {userPerms}");
+        userPerms |= Permissions.Execute;
+        Console.WriteLine($"After Adding Execute: {userPerms}");
+        userPerms &= ~Permissions.Write;
+        Console.WriteLine($"After Removing Write: {userPerms}");
+        bool hasRead = userPerms.HasFlag(Permissions.Read);
+        bool hasWrite = userPerms.HasFlag(Permissions.Write);
+        Console.WriteLine($"Has Read Permission? {hasRead}");
+        Console.WriteLine($"Has Write Permission? {hasWrite}");
+
+        //enum3
+        Console.Write("Enter a color name: ");
+        string input = Console.ReadLine();
+
+        if (Enum.TryParse(input, true, out Colors color))
+        {
+            Console.WriteLine($"{color} is a primary color.");
+        }
+        else
+        {
+            Console.WriteLine($"{input} is NOT a primary color.");
+        }
+
+        //struct2
+        Console.WriteLine("Enter Point 1 (X and Y):");
+        double x1 = double.Parse(Console.ReadLine());
+        double y1 = double.Parse(Console.ReadLine());
+        Point p1 = new Point(x1, y1);
+
+        Console.WriteLine("Enter Point 2 (X and Y):");
+        double x2 = double.Parse(Console.ReadLine());
+        double y2 = double.Parse(Console.ReadLine());
+        Point p2 = new Point(x2, y2);
+
+        double distance = p1.DistanceTo(p2);
+        Console.WriteLine($"Distance between points: {distance:F2}");
+        
+        //struct3
+        Person[] people = new Person[3];
+
+        for (int i = 0; i < 3; i++)
+        {
+            Console.WriteLine($"Enter details for person {i + 1}:");
+            Console.Write("Name: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Age: ");
+            int age = int.Parse(Console.ReadLine());
+
+            people[i] = new Person { Name = name, Age = age };
+        }
+
+        Person oldest = people[0];
+        for (int i = 1; i < people.Length; i++)
+        {
+            if (people[i].Age > oldest.Age)
+            {
+                oldest = people[i];
+            }
+        }
+
+        Console.WriteLine($"\nThe oldest person is {oldest.Name} with age {oldest.Age}.");
+
+    }
+
+    static void TestValue(int x)
+    {
+        x = 100; 
+    }
+
+    static void TestRef(ref int x)
+    {
+        x = 100; 
+    }
+
+    static void ModifyByValue(Person p)
+    {
+        p.Name = "Ali";
+        p = new Person { Name = "Mona" };
+    }
+
+    static void ModifyByRef(ref Person p)
+    {
+        p = new Person { Name = "Omar" }; 
+    }
+
+    static void SumAndSubtract(double num1, double num2, out double sum, out double sub)
+    {
+        sum = num1 + num2;
+        sub = num1 - num2;
+    }
+
+    static int SumOfDigits(int number)
+    {
+        int sum = 0;
+        int temp = Math.Abs(number);
+
+        while (temp > 0)
+        {
+            sum += temp % 10;
+            temp /= 10;
+        }
+
+        return sum;
+    }
+
+    static bool IsPrime(int number)
+    {
+        if (number <= 1) return false;
+        for (int i = 2; i * i <= number; i++)
+        {
+            if (number % i == 0) return false;
+        }
+        return true;
+    }
+
+    static void MinMaxArray(int[] arr, ref int min, ref int max)
+    {
+        if (arr == null || arr.Length == 0) return;
+
+        min = arr[0];
+        max = arr[0];
+
+        foreach (int item in arr)
+        {
+            if (item < min) min = item;
+            if (item > max) max = item;
+        }
+    }
+
+    static long Factorial(int n)
+    {
+        if (n < 0) throw new ArgumentException("Number must be non-negative.");
+
+        long result = 1;
+        for (int i = 1; i <= n; i++)
+        {
+            result *= i;
+        }
+        return result;
+    }
+
+    static string ChangeChar(string input, int position, char newChar)
+    {
+        if (position < 0 || position >= input.Length)
+        {
+            throw new ArgumentOutOfRangeException("Position is out of bounds.");
+        }
+
+        char[] chars = input.ToCharArray();
+        chars[position] = newChar;
+        return new string(chars);
+    }
+
+}
+class Person
+{
+    public string Name { get; set; }
+}
